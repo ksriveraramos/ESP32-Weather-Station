@@ -8,14 +8,25 @@ An IoT project powered by an **ESP32** microcontroller and a **DHT11** temperatu
 
 ## Bill of Materials (BOM)
 
-* **ESP32** Development Board
-* **DHT11** (or DHT22) Temperature & Humidity Sensor
+* **ESP32-WROOM-32** Development Board
+* **DHT11** Temperature & Humidity Sensor
 
 ---
 
+## Web
+
+![Web dashboard](extra/dashboard.png)
+> *Live data visualization dashboard! Shows how the hardware seamlessly updates environmental metrics over WiFi and ThingSpeak every 15 seconds. *
+
 ## Hardware
- ![Real Circuit Prototype](hardware/IRL-Prototype.PNG)
+ ![Real Circuit Prototype](extra/IRL-Prototype.PNG)
 > *The actual prototype! Sun-bleached wires proof that this project has been running and testing out in the real world.* **Photo taken: September 26, 2026**
+
+![Schematic](extra/Schematic.png)
+> *The KiCad circuit schematic! Showing the ESP32-WROOM-32 wired up with the DHT11 sensor, pull-up resistors, and buzzer.*
+
+![PCB Render](extra/PCB_Render.png)
+> *3D PCB render exported directly from KiCad! Demonstrating the compact board design and trace routing for the final hardware layout (and its errors).*
 
 ---
 
