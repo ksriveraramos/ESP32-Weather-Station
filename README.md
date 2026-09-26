@@ -25,4 +25,5 @@ An IoT project powered by an **ESP32** microcontroller and a **DHT11** temperatu
 .
 ├── firmware/         # ESP32 C++ source code (Arduino IDE)
 ├── web/              # Custom web dashboard interface
-└── hardware/         # photos, schematics, and PCB files
+├── hardware/         # photos, schematics, and PCB files
+└── extra/            # extra photos
