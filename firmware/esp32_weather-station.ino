@@ -16,11 +16,20 @@ String apiKey = "YOUR_THINGSPEAK_WRITE_API_KEY";
 
 DHT dht(DHTPIN, DHTTYPE);
 
+// Buzzer
+#define BUZZER_PIN 19
+
 void setup() {
   Serial.begin(115200);
 
+  // Start DHT sensor
   dht.begin();
 
+  // Start buzzer
+  pinMode(BUZZER_PIN, OUTPUT);
+  digitalWrite(BUZZER_PIN, LOW);
+
+  // Connect to WiFi
   WiFi.begin(ssid, password);
 
   Serial.print("Connecting to WiFi");
@@ -37,6 +46,7 @@ void setup() {
 
 void loop() {
 
+  // Read DHT11
   float humidity = dht.readHumidity();
   float temperature = dht.readTemperature();
 
@@ -69,12 +79,26 @@ void loop() {
     int httpCode = http.GET();
 
     if (httpCode > 0) {
+
+      String response = http.getString();
+
       Serial.print("ThingSpeak response: ");
-      Serial.println(http.getString());
+      Serial.println(response);
+
+      if (response != "0") {
+        digitalWrite(BUZZER_PIN, HIGH);
+        delay(100);
+        digitalWrite(BUZZER_PIN, LOW);
+
+        Serial.println("BEEP!");
+      }
+
     } 
     else {
+
       Serial.print("HTTP error: ");
       Serial.println(httpCode);
+
     }
 
     http.end();
