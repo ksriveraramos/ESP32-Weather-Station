@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<head>
+<title>ESP32 Weather Station Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body { 
+    font-family: 'Fira Code', monospace; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-start; 
+    align-items: center; 
+    background: #333333; 
+    color: #ffffff; 
+    margin: 0; 
+    padding: 20px; 
+  }
+  h1 { color: #0ff; text-align: center; }
+  p { text-align: center; max-width: 800px; }
+  .sensor { font-size: 24px; margin: 10px 0; text-align: center; }
+  .sensor span { font-weight: bold; }
+  .charts-container {
+    display: flex; 
+    justify-content: center; 
+    gap: 20px; 
+    flex-wrap: wrap; 
+    width: 100%;
+    max-width: 1000px;
+    margin-top: 20px;
+  }
+  canvas { 
+    background: #222; 
+    border-radius: 8px; 
+    flex: 1 1 400px; 
+    max-width: 500px; 
+    height: 300px; 
+  }
+  a { color: #0ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<h1>ESP32 Weather Station Dashboard</h1>
+<p>Currently taking environmental data</p>
+<p>This ESP32 Weather Station is a microcontroller-based project that reads temperature and humidity using a DHT11 sensor. The data is sent to the cloud via ThingSpeak, allowing real-time monitoring from any browser or device.</p>
+<p>Project by <a href="#" target="_blank">Kevin S. Rivera Ramos</a></p>
+
+<div class="sensor" style="color: #0f0;">Temperature: <span id="temp">--</span> °C</div>
+<div class="sensor" style="color: #0ff;">Humidity: <span id="hum">--</span> %</div>
+
+<div class="charts-container">
+  <canvas id="tempChart"></canvas>
+  <canvas id="humChart"></canvas>
+</div>
+
+<script>
+  const channelId = "YOUR_CHANNEL_ID"; // REPLACE WITH YOUR CHANNEL ID
+  const apiKey = "YOUR_READ_API_KEY"; // REPLACE WITH YOUR READ API KEY
+  const results = 25; 
+
+  const tempData = {
+    labels: [],
+    datasets: [{
+      label: 'Temperature (°C)',
+      data: [],
+      borderColor: '#00ff00',
+      backgroundColor: 'rgba(0,255,0,0.2)',
+      fill: true,
+      tension: 0.3
+    }]
+  };
+
+  const humData = {
+    labels: [],
+    datasets: [{
+      label: 'Humidity (%)',
+      data: [],
+      borderColor: '#00ffff',
+      backgroundColor: 'rgba(0,255,255,0.2)',
+      fill: true,
+      tension: 0.3
+    }]
+  };
+
+  const tempChart = new Chart(document.getElementById('tempChart').getContext('2d'), {
+    type: 'line',
+    data: tempData,
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color: '#fff' } } },
+      scales: {
+        x: { title: { display: true, text: 'Time (every 15 seconds)', color: '#fff' }, ticks: { color: '#fff' } },
+        y: { beginAtZero: true, ticks: { color: '#fff' } }
+      }
+    }
+  });
+
+  const humChart = new Chart(document.getElementById('humChart').getContext('2d'), {
+    type: 'line',
+    data: humData,
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color: '#fff' } } },
+      scales: {
+        x: { title: { display: true, text: 'Time (every 15 seconds)', color: '#fff' }, ticks: { color: '#fff' } },
+        y: { beginAtZero: true, ticks: { color: '#fff' } }
+      }
+    }
+  });
+
+  async function fetchData() {
+    try {
+      const res = await fetch(`https://api.thingspeak.com/channels/${channelId}/feeds.json?results=${results}&api_key=${apiKey}`);
+      const data = await res.json();
+
+      tempData.labels.length = 0; tempData.datasets[0].data.length = 0;
+      humData.labels.length = 0; humData.datasets[0].data.length = 0;
+
+      data.feeds.forEach(feed => {
+        const time = new Date(feed.created_at).toLocaleTimeString();
+        tempData.labels.push(time);
+        humData.labels.push(time);
+        tempData.datasets[0].data.push(parseFloat(feed.field1));
+        humData.datasets[0].data.push(parseFloat(feed.field2));
+      });
+
+      tempChart.update();
+      humChart.update();
+
+      const latest = data.feeds[data.feeds.length - 1];
+      if(latest.field1 && latest.field2){
+        document.getElementById('temp').innerText = latest.field1;
+        document.getElementById('hum').innerText = latest.field2;
+      }
+    } catch(e) {
+      console.error("Error fetching ThingSpeak data", e);
+    }
+  }
+
+  fetchData();
+  setInterval(fetchData, 15000); 
+</script>
+
+</body>
+</html>
