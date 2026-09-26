@@ -13,10 +13,9 @@ An IoT project powered by an **ESP32** microcontroller and a **DHT11** temperatu
 
 ---
 
-## 🔌ircuit Diagram & Connections
-
-
-> 📷 *Circuit photo and custom PCB layout coming soon in the `hardware/` folder!*
+## Hardware
+ *![Real Circuit Prototype]([hardware/IRL-Prototype.jpg))
+> *The actual prototype! Sun-bleached wires proof that this project has been running and testing out in the real world.* **Photo taken: September 26, 2026**
 
 ---
 
