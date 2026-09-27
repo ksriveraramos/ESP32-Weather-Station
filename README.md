@@ -1,6 +1,6 @@
 # ESP32  Weather Station
 
-> **A very special project for me!** This was my very first project, built with a lot of patience and excitement as I took my first steps into the world of electronics (It has a lot of errors but its part of the proccess). It was where I began learning how to solder, read and create schematics, connect hardware, and bring together electronics, software, and the web into a working system. **November 2025**
+> **A very special project for me!** This was my very first project, built with a lot of patience and excitement as I took my first steps into the world of electronics (It has a lot of errors but its part of the process). It was where I began learning how to solder, read and create schematics, connect hardware, design PCBs, and bring together electronics, software, and the web into a working system. **November 2025**
 
 An IoT project powered by an **ESP32** microcontroller and a **DHT11** temperature and humidity sensor. It reads environmental data in real-time and sends it to the **ThingSpeak** cloud platform via HTTP GET requests. Additionally, it features a custom web dashboard to display the data.
 
